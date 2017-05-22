@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+
+      <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>PKSchedule.root</param-value>
+      </context-param>
+
+      <context-param>
+        <param-name>contextConfigLocation</param-name>
+
+        <param-value>
+          classpath:spring/spring.xml,
+          classpath:spring/spring-*.xml
+        </param-value>
+      </context-param>
+
+
+      <filter>
+        <filter-name>SpringEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+          <param-name>encoding</param-name>
+          <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+          <param-name>forceEncoding</param-name>
+          <param-value>true</param-value>
+        </init-param>
+      </filter>
+      <filter-mapping>
+        <filter-name>SpringEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+      </filter-mapping>
+
+
+      <context-param>
+        <param-name>logbackConfigLocation</param-name>
+        <param-value>classpath:logback.xml</param-value>
+      </context-param>
+      <listener>
+        <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
+      </listener>
+
+    <listener>
+        <listener-class>com.pkh.schedule.listener.QuartzContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+      </listener>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.jpg</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.png</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.js</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.css</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.html</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.woff</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.woff2</url-pattern>
+      </servlet-mapping>
+      <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.ttf</url-pattern>
+      </servlet-mapping>
+
+      <servlet>
+        <servlet-name>PKScheduleDispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+          <param-name>contextConfigLocation</param-name>
+          <param-value>classpath:spring/spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+      </servlet>
+      <servlet-mapping>
+        <servlet-name>PKScheduleDispatcherServlet</servlet-name>
+        <url-pattern>/</url-pattern>
+      </servlet-mapping>
+
+    <listener>
+        <listener-class>
+            org.directwebremoting.servlet.DwrListener
+        </listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>dwr-invoker</servlet-name>
+        <servlet-class>
+            org.directwebremoting.servlet.DwrServlet
+        </servlet-class>
+        <init-param>
+            <param-name>crossDomainSessionSecurity</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowScriptTagRemoting</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>classes</param-name>
+            <param-value>java.lang.Object</param-value>
+        </init-param>
+        <init-param>
+            <param-name>activeReverseAjaxEnabled</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>initApplicationScopeCreatorsAtStartup</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>maxWaitAfterWrite</param-name>
+            <param-value>3000</param-value>
+        </init-param>
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>WARN</param-value>
+        </init-param>
+        <init-param>
+            <param-name>debug</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dwr-invoker</servlet-name>
+        <url-pattern>/dwr/*</url-pattern>
+    </servlet-mapping>
+
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+      </welcome-file-list>
+</web-app>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- transaction manager -->
+	<bean id="businessdbTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="businessDataSource" />
+	</bean>
+	<tx:annotation-driven transaction-manager="businessdbTransactionManager" />
+
+	<!-- txAdbice -->
+	<tx:advice id="businessTxAdvice" transaction-manager="businessdbTransactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED"  />
+			<tx:method name="add*" propagation="REQUIRED"  />
+			<tx:method name="delete*" propagation="REQUIRED"  />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="adjust*" propagation="REQUIRED" />
+			<tx:method name="create*" propagation="REQUIRED" />
+			<tx:method name="lock*" propagation="REQUIRED"  />
+			<tx:method name="unlock*" propagation="REQUIRED" />
+			<tx:method name="get*" propagation="SUPPORTS" />
+			<tx:method name="query*" propagation="SUPPORTS" />
+			<tx:method name="find*" propagation="SUPPORTS" />
+			<tx:method name="select*" propagation="SUPPORTS" />
+			<tx:method name="return*" propagation="SUPPORTS" />
+		</tx:attributes>
+	</tx:advice>
+
+</beans>

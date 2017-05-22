@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <util:properties id="hostsSetting" location="file:///${EXTERNAL_DIR}/hosts.properties" />
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+        <property name="searchSystemEnvironment" value="true" />
+        <property name="locations">
+            <list>
+                <value>file:///${EXTERNAL_DIR}/PKSchedule/PKSchedule.properties</value>
+                <value>file:///${EXTERNAL_DIR}/hosts.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+
+
+    <bean id="runOnceADayService" class="com.pkh.schedule.service.impl.RunOnceADayServiceImpl">
+        <property name="pkecMerchantMapper" ref="PKECMerchantMapper"/>
+        <property name="pkecShopMapper" ref="PKECShopMapper"/>
+        <constructor-arg index="0" value="${pkcore.url}"/>
+    </bean>
+
+    <!--<bean id="handOutService" class="com.pkh.schedule.service.impl.HandOutServiceImpl">-->
+
+    <!--</bean>-->
+
+    <!--<bean id="customerQuartzTimeService" class="com.pkh.schedule.service.impl.CustomerQuartzTimeServiceImpl">-->
+        <!--<property name="sysSchedulerMapper" ref="sysSchedulerMapper"/>-->
+    <!--</bean>-->
+
+    <bean id="logOutput" class="com.pkh.schedule.dwr.SendMessage">
+
+    </bean>
+    <!--<bean id="dwrController" class="com.pkh.schedule.controller.DwrController">-->
+
+    <!--</bean>-->
+
+    <!--<bean id="orderService" class="com.pkh.pkec.order.service.impl.OrderServiceImpl">-->
+        <!--<property name="orderMapper" ref="orderMapper"/>-->
+    <!--</bean>-->
+
+
+
+    <!--<bean id="viewResolver"-->
+          <!--class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="viewClass"-->
+                  <!--value="org.springframework.web.servlet.view.JstlView" />-->
+        <!--<property name="prefix" value="/WEB-INF/" />-->
+        <!--<property name="suffix" value=".html"></property>-->
+    <!--</bean>-->
+
+
+</beans>

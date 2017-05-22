@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quartz定时器</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="image/alarm.png">
+    <link rel="stylesheet" href="css/bootstrap.min.css" >
+    <link rel="stylesheet" href="css/custom/main.css">
+    <script src="js/jquery-2.1.1.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/PKSchedule/dwr/engine.js"></script>
+    <script type="text/javascript" src="/PKSchedule/dwr/util.js"></script>
+    <script type="text/javascript" src="/PKSchedule/dwr/interface/dwrOutput.js"></script>
+
+</head>
+<script>
+    $(function() {
+        dwr.engine.setActiveReverseAjax(true);
+        dwr.engine.setNotifyServerOnPageUnload(true);
+    });
+    function showMessage(autoMessage) {
+        alert(11);
+        $("#msg").append(autoMessage);
+    }
+    function getDate(message) {
+        // message 是后台处理完成返回的数据
+        console.log(message);
+        $("#msg").append(message+"</br>");
+    }
+</script>
+<body class="maincs">
+<div class="container" style="background-color: #b9def0;height: 100%">
+
+    <div class="indextop">
+        <h1>Quartz定时器</h1>
+
+    </div>
+
+    <div style="margin-top: 20px;">
+
+    <ul id="quartzList" class="col-md-2">
+        <li class="btn btn-primary" style="margin-top: 20px">
+            定时任务列表
+        </li>
+        <li class="btn btn-primary" style="margin-top: 10px">
+            配置定时任务
+        </li>
+    </ul>
+    <div id="content" class="col-md-5" style="margin-top: 20px">
+        <div class="row" style="text-align: center">
+                <table border="1">
+                    <thead>
+                    <tr>
+                        <td style="width: 200px">
+                            <h4>同步项目</h4>
+                        </td>
+                        <td style="width: 150px">
+                            <h4>操作</h4>
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody id="re">
+                    </tbody>
+                </table>
+        </div>
+
+        <div class="row" style="display: none;text-align: center">
+                <table border="1">
+                    <thead>
+                    <tr>
+                        <td style="width: 200px">
+                            <h4>同步项目</h4>
+                        </td>
+                        <td style="width: 120px">
+                            <h4>使用状态</h4>
+                        </td>
+                        <td style="width: 100px">
+                            <h4>操作</h4>
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody id="reall1">
+                    </tbody>
+                </table>
+
+            <table border="1" style="margin-top: 10px">
+                <thead>
+                <tr>
+                    <td style="width: 200px">
+                        <h4>同步项目</h4>
+                    </td>
+                    <td style="width: 120px">
+                        <h4>使用状态</h4>
+                    </td>
+                    <td style="width: 100px">
+                        <h4>操作</h4>
+                    </td>
+                </tr>
+                </thead>
+                <tbody id="reall2">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-5" style="height: 500px; background-color: #28a4c9;margin-top: 20px">
+            <h3>操作日志：</h3>
+        <div id="msg" style="float: right; color: red; font-size: 15px;">
+        </div>
+    </div>
+    </div>
+</div>
+
+</body>
+<script>
+    $(function(){
+        $('#quartzList li').click(function() {
+            var index = $(this).index();
+            $('#content .row').eq(index).show().siblings().hide();
+        })
+    });
+    $(function(){
+        var temp;
+       $.ajax({
+           type: "post",
+           dataType:'json', //接受数据格式
+           cache:false,
+           url: "queryScheduler",
+           beforeSend: function(XMLHttpRequest){
+           },
+           success: function(result){
+               var htmlList;
+               for (var r in result.sysSchedulers)
+               {
+                   console.dir(result.sysSchedulers[r]);
+                   htmlList+='<tr><td><ul><li><h4>'+result.sysSchedulers[r].scheduleDescription+'</h4></li></ul></td><td><h4><button value="'+result.sysSchedulers[r].serviceFunction+'" type="button" onclick="startInterval(this.value)" id="aUnread">执行</button></h4></td></tr>';
+               }
+                $("#re").append(htmlList);
+               console.dir(result);
+               if (result.errorCode==0) {
+                   temp = result.sysSchedulers;
+               }else {
+                   alert(result.errorMessage);
+               }
+           },
+           error: function(){
+               //请求出错处理
+               alert("Error!");
+           }
+       });
+        $.ajax({
+            type: "post",
+            dataType:'json', //接受数据格式
+            cache:false,
+            url: "queryAllScheduler",
+            beforeSend: function(XMLHttpRequest){
+            },
+            success: function(result){
+                var htmlList1;
+                var htmlList2;
+                for (var r in result.invokeSchedulers)
+                {
+                    console.dir(result.invokeSchedulers[r]);
+                    htmlList1+='<tr><td><input value="'+result.invokeSchedulers[r].id+'" type="checkbox" onclick="startInterval(this.value)" id="aUnread"/><h4>'+result.invokeSchedulers[r].scheduleDescription+'</h4></td><td><h4>启用</h4></td><td><h4><input value="'+result.invokeSchedulers[r].id+'" type="checkbox" onclick="startInterval(this.value)" id="aUnread"/></h4></td></tr>'
+                    }
+                for (var r in result.disabledSchedulers)
+                {
+                    console.dir(result.disabledSchedulers[r]);
+                    htmlList2+='<tr><td><ul><li><h4>'+result.disabledSchedulers[r].scheduleDescription+'</h4></li></ul></td><td><h4>禁用</h4></td><td><h4><input value="'+result.disabledSchedulers[r].id+'" type="checkbox" onclick="startInterval(this.value)" id="aUnread"/></h4></td></tr>'
+                }
+                $("#reall1").append(htmlList1);
+                $("#reall2").append(htmlList2);
+                console.dir(result);
+                if (result.errorCode==0) {
+                    temp = result.sysSchedulers;
+                }else {
+                    alert(result.errorMessage);
+                }
+            },
+            error: function(){
+                //请求出错处理
+                alert("Error!");
+            }
+        });
+
+   });
+
+
+
+    function startInterval (request){
+        console.log(request);
+        document.getElementById( 'msg').innerHTML= " ";
+
+
+            $.ajax({
+                type: "post",
+                dataType:'json', //接受数据格式
+                cache:false,
+                url: "handout",
+                data:{serviceFunction:request},
+                success: function(data){
+
+//                    document.getElementById("txtHint").innerHTML = data.errorMessage;
+                },
+                error: function(){
+                    //请求出错处理
+                    alert("Error!");
+                }
+            });
+    }
+</script>
+</html>

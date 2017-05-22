@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- dataSource -->
+    <bean id="businessDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>java:comp/env/${businessdb}</value>
+        </property>
+    </bean>
+
+    <bean id="quartzDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName">
+            <value>java:comp/env/${quartzdb}</value>
+        </property>
+    </bean>
+
+    <bean id="ManagerSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:spring/sqlMapConfig.xml"/>
+        <property name="dataSource" ref="businessDataSource"/>
+        <!--<property name="mapperLocations" value="classpath:com/pkh/pkec/*/dao/*Mapper.xml"/>-->
+    </bean>
+    <!-- mapperScanner -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.pkh.pkec.*.dao;com.pkh.pkec.*.mapper;com.pkh.pkec.*.Mapper" />
+        <property name="sqlSessionFactoryBeanName" value="ManagerSqlSessionFactory" />
+    </bean>
+
+
+    <bean id="quartzdbSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="configLocation" value="classpath:spring/sqlMapConfig.xml"/>
+    <property name="dataSource" ref="quartzDataSource"/>
+    <property name="mapperLocations" value="classpath:com/pkh/schedule/**/**Mapper.xml"/>
+    </bean>
+
+    <bean id="sysSchedulerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+      <property name="mapperInterface" value="com.pkh.schedule.mapper.SysSchedulerMapper"/>
+      <property name="sqlSessionFactory" ref="quartzdbSqlSessionFactory" />
+    </bean>
+    <!-- sqlSessionFactory -->
+    <!--<bean id="businessdbSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+        <!--<property name="configLocation" value="classpath:spring/sqlMapConfig.xml"/>-->
+        <!--<property name="dataSource" ref="businessDataSource"/>-->
+        <!--<property name="mapperLocations" value="classpath:com/pkh/pkec/**/**/**Mapper.xml"/>-->
+    <!--</bean>-->
+    <!--<bean id="merchantCustomMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.product.mapper.PKECMerchantCustomMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="merchantMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.product.dao.PKECMerchantMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="merchantTagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.product.dao.PKECMerchantTagMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="shopMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.product.dao.PKECShopMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="productMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.product.dao.PKECProductMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="productCustomMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.product.mapper.PKECProductCustomMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="shopProductMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.product.dao.PKECShopProductMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="orderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.order.dao.PKECOrderMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="orderMECMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.order.dao.PKECOrderMECMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="orderCustomMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.order.Mapper.PKECOrderCustomMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="homeImageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECHomeImageMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="linkProductMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECLinkProductMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="optionGroupMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECOptionGroupMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecOptionItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECOptionItemMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecPartnerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECPartnerMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecCoreCustomMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.mapper.PKECCoreCustomMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserFamilyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserFamilyMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserFamilyCustomMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserFamilyCustomMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserCardMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserCardMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecSysDistrictMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECSysDistrictMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecSysCityMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECSysCityMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecSysProvinceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECSysProvinceMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserScoreMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserScoreMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserScoreChangeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserScoreChangeMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserMessageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserMessageMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecOrderTagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.order.dao.PKECOrderTagMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserAdviceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECUserAdviceMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="systemVersionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECSystemVersionMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"/>-->
+    <!--</bean>-->
+    <!--<bean id="shopEvaluateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.mapper.PKECShopEvaluateMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"/>-->
+    <!--</bean>-->
+    <!--<bean id="pkecInsuranceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECInsuranceMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecHuanxinMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECHuanxinMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecLogInfo" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECLogInfoMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecMerchantImage" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.core.dao.PKECMerchantImageMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecUserCustomMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.mapper.PKECUserCustomMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecDoctorMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECDoctorMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+    <!--<bean id="pkecDoctorMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">-->
+        <!--<property name="mapperInterface" value="com.pkh.pkec.coreUser.dao.PKECDoctorMapper"/>-->
+        <!--<property name="sqlSessionFactory" ref="businessdbSqlSessionFactory"></property>-->
+    <!--</bean>-->
+</beans>
